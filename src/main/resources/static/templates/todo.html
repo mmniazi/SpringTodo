@@ -1,6 +1,6 @@
 <md-content class="md-padding" layout="column" layout-fill layout-align="center center">
     <md-card layout-fill layout-fill id="input-container">
-        <div layout="row">
+        <form layout="row" ng-submit="addTodo()">
             <span flex="5"></span>
 
             <md-input-container flex="80" id="input">
@@ -15,15 +15,15 @@
 
             <md-input-container flex="15">
                 <md-button
+                        type="submit"
                         class="md-fab"
                         aria-label="Add todo item"
-                        ng-disabled="newTask.$error || newTask == '' "
-                        ng-click="addTodo()">
+                        ng-disabled="newTask.$error || newTask == '' ">
                     <md-icon md-svg-icon="resources/add.svg"></md-icon>
                 </md-button>
             </md-input-container>
 
-        </div>
+        </form>
         <md-divider></md-divider>
 
         <md-subheader class="md-no-sticky">Tasks</md-subheader>

@@ -26,6 +26,8 @@ public class TodoApplication implements CommandLineRunner {
     @RequestMapping(value = "/tasks", method = RequestMethod.POST)
     public void updateTasks(@RequestBody ArrayList<Task> newTasks) {
         tasks = newTasks;
+//        Instead of saving id's and and updating task using id, just replace the complete table.
+//        You may ask why? well it is a demo app not a performance critical application.
         jdbcTemplate.execute("TRUNCATE TABLE tasks");
         tasks.forEach(task -> jdbcTemplate.update("INSERT INTO tasks(string, done) VALUES (?,?)",
                 task.getString(), task.isDone()));
