@@ -1,2 +1,1 @@
-web: cd 0.0.1-SNAPSHOT
-web: java -jar todo-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=$PORT -jar  target/todo-0.0.1-SNAPSHOT.jar
