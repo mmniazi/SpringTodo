@@ -1,4 +1,1 @@
-web: mvn clean package
-web: ls
-web: cd target
-web: java -jar todo-0.0.1-SNAPSHOT.jar
+web: java -jar 0.0.1-SNAPSHOT/todo-0.0.1-SNAPSHOT.jar
