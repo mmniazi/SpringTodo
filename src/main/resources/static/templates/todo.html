@@ -1,0 +1,37 @@
+<md-content class="md-padding" layout="column" layout-fill layout-align="center center">
+    <md-card layout-fill layout-fill id="input-container">
+        <div layout="row">
+            <span flex="5"></span>
+
+            <md-input-container flex="80" id="input">
+                <label>Enter new task</label>
+                <input name="taskInput" ng-model="newTask" type="text" maxlength="60" />
+                <div ng-messages="newTask.$error" role="alert">
+                    <div ng-message-exp="['maxlength']">
+                        Task should not be greater than 60 characters
+                    </div>
+                </div>
+            </md-input-container>
+
+            <md-input-container flex="15">
+                <md-button
+                        class="md-fab"
+                        aria-label="Add todo item"
+                        ng-disabled="newTask.$error || newTask == '' "
+                        ng-click="addTodo()">
+                    <md-icon md-svg-icon="resources/add.svg"></md-icon>
+                </md-button>
+            </md-input-container>
+
+        </div>
+        <md-divider></md-divider>
+
+        <md-subheader class="md-no-sticky">Tasks</md-subheader>
+        <md-list-item ng-repeat="todo in todoList">
+            <md-checkbox ng-model="todo.done" aria-label="Todo Checkbox"></md-checkbox>
+            <p>{{todo.string}}</p>
+            <md-icon class="md-secondary" aria-label="Delete" ng-click="removeTodo(todo)" md-svg-icon="resources/delete.svg"></md-icon>
+        </md-list-item>
+
+    </md-card>
+</md-content>
