@@ -1,11 +1,10 @@
-<md-content class="md-padding" layout="column" layout-fill layout-align="center center">
-    <md-card layout-fill layout-fill id="input-container">
+<md-content layout="column" layout-fill layout-wrap layout-align="center center" id="app-container">
+    <md-card class="md-padding" layout-fill>
         <form layout="row" ng-submit="addTodo()">
-            <span flex="5"></span>
 
-            <md-input-container flex="80" id="input">
+            <md-input-container flex id="input">
                 <label>Enter new task</label>
-                <input name="taskInput" ng-model="newTask" type="text" maxlength="60" />
+                <input name="taskInput" ng-model="newTask" type="text" maxlength="60"/>
                 <div ng-messages="newTask.$error" role="alert">
                     <div ng-message-exp="['maxlength']">
                         Task should not be greater than 60 characters
@@ -13,7 +12,7 @@
                 </div>
             </md-input-container>
 
-            <md-input-container flex="15">
+            <md-input-container>
                 <md-button
                         type="submit"
                         class="md-fab"
@@ -27,11 +26,13 @@
         <md-divider></md-divider>
 
         <md-subheader class="md-no-sticky">Tasks</md-subheader>
-        <md-list-item ng-repeat="todo in todoList">
+
+        <ul ng-repeat="todo in todoList" layout="row" layout-align="space-between center" class="md-padding">
             <md-checkbox ng-model="todo.done" aria-label="Todo Checkbox"></md-checkbox>
-            <p>{{todo.string}}</p>
-            <md-icon class="md-secondary" aria-label="Delete" ng-click="removeTodo(todo)" md-svg-icon="resources/delete.svg"></md-icon>
-        </md-list-item>
+            <span flex="85" class="list-label">{{todo.string}}</span>
+            <md-icon class="md-secondary" aria-label="Delete" ng-click="removeTodo(todo)"
+                     md-svg-icon="resources/delete.svg"></md-icon>
+        </ul>
 
     </md-card>
 </md-content>
