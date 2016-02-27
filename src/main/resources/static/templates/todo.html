@@ -4,7 +4,7 @@
 
             <md-input-container flex id="input">
                 <label>Enter new task</label>
-                <input name="taskInput" ng-model="newTask" type="text" maxlength="60"/>
+                <input autocomplete="off" name="taskInput" ng-model="newTask" type="text" maxlength="60"/>
                 <div ng-messages="newTask.$error" role="alert">
                     <div ng-message-exp="['maxlength']">
                         Task should not be greater than 60 characters
