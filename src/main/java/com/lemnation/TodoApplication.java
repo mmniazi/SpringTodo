@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -13,8 +13,25 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SpringBootApplication
 @RestController
 public class TodoApplication implements CommandLineRunner {
+    @Autowired
+    private TaskRepository repository;
+
     ArrayList<Task> tasks = new ArrayList<>();
     AtomicInteger counter = new AtomicInteger();
+
+    public static void main(String[] args) {
+        SpringApplication.run(TodoApplication.class, args);
+    }
+
+    @Override
+    public void run(String... strings) throws Exception {
+
+        tasks.addAll(repository.findAll());
+
+//        Find highest value of Id in tasks list and if list is not empty assign highest value to counter
+        tasks.stream().max(Comparator.comparing(Task::getId))
+                .ifPresent(task -> counter.set(task.getId()));
+    }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
     public ArrayList<Task> getTasks() {
@@ -22,67 +39,41 @@ public class TodoApplication implements CommandLineRunner {
     }
 
     @RequestMapping(value = "/tasks/add", method = RequestMethod.POST)
-    public int addTask(@RequestBody Task newTask) {
+    public int addTask(@RequestBody Task insertedTask) {
 
-        newTask.setId(counter.getAndIncrement());
-        tasks.add(newTask);
+        insertedTask.setId(counter.getAndIncrement());
+        tasks.add(insertedTask);
 
-//        Clients.update(newTask);
+        repository.insert(insertedTask);
 
-        jdbcTemplate.update("INSERT INTO tasks(string, done, id) VALUES (?,?,?)",
-                newTask.getString(), newTask.isDone(), newTask.getId());
+//        Clients.update(insertedTask);
 
-        return newTask.getId();
+        return insertedTask.getId();
     }
 
     @RequestMapping(value = "/tasks/remove", method = RequestMethod.POST)
-    public void removeTask(@RequestBody Task newTask) {
+    public void removeTask(@RequestBody Task removedTask) {
 
-        tasks.removeIf(task -> task.getId() == newTask.getId());
+        tasks.removeIf(task -> task.getId() == removedTask.getId());
 
-//        Clients.update(newTask);
+//        Clients.update(removedTask);
 
-        jdbcTemplate.update("DELETE FROM tasks WHERE id=?", newTask.getId());
+        repository.delete(removedTask);
     }
 
     @RequestMapping(value = "/tasks/update", method = RequestMethod.POST)
-    public void updateTask(@RequestBody Task newTask) {
+    public void updateTask(@RequestBody Task updatedTask) {
 
-        // Find the task whose id is equal to newTask id and then replace that task with newTask
+        // Find the task whose id is equal to updatedTask id and then replace that task with updatedTask
         tasks.stream()
-                .filter(task -> task.getId() == newTask.getId())
-                .findFirst().ifPresent(oldTask -> {
-            tasks.set(tasks.indexOf(oldTask), newTask);
-        });
+                .filter(task -> task.getId() == updatedTask.getId())
+                .findFirst().ifPresent(oldTask ->
+                tasks.set(tasks.indexOf(oldTask), updatedTask)
+        );
 
 //        Clients.update(newTask);
 
-        jdbcTemplate.update("UPDATE tasks SET string=?, done=? WHERE id=?",
-                newTask.getString(), newTask.isDone(), newTask.getId());
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(TodoApplication.class, args);
-    }
-
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    @Override
-    public void run(String... strings) throws Exception {
-
-        jdbcTemplate.execute(
-                "CREATE TABLE IF NOT EXISTS tasks(string VARCHAR(255), done BOOLEAN, id INT, PRIMARY KEY (id))");
-
-        jdbcTemplate.query("SELECT string, done, id FROM tasks",
-                (rs, rowNum) -> new Task(rs.getString("string"), rs.getBoolean("done"), rs.getInt("id")))
-                .forEach(task -> tasks.add(task.getId(), task));
-
-//        Find highest value of Id in tasks list and if list is not empty assign highest value to counter
-        tasks.stream().max(Comparator.comparing(Task::getId))
-                .ifPresent(task -> counter.set(task.getId()));
-
-//        TODO: check counter
+        repository.save(updatedTask);
     }
 
 }

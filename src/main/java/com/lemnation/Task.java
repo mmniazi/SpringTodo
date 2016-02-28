@@ -1,12 +1,18 @@
 package com.lemnation;
 
+
+import org.springframework.data.annotation.Id;
+
 /**
  * Created by Muhammad on 2/26/2016.
  */
 public class Task {
+
+    @Id
+    private int id;
+
     private String string;
     private boolean done;
-    private int id;
 
     public Task() {
 
