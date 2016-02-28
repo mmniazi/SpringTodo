@@ -6,14 +6,16 @@ package com.lemnation;
 public class Task {
     private String string;
     private boolean done;
+    private int id;
 
     public Task() {
 
     }
 
-    public Task(String string, boolean done) {
+    public Task(String string, boolean done, int id) {
         this.string = string;
         this.done = done;
+        this.id = id;
     }
 
 
@@ -31,5 +33,13 @@ public class Task {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

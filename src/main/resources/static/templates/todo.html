@@ -1,9 +1,10 @@
 <md-content layout="column" layout-fill layout-wrap layout-align="center center" id="app-container">
     <md-card class="md-padding" layout-fill>
-        <form layout="row" ng-submit="addTodo()">
+        <form layout="row" ng-submit="addTask()">
 
             <md-input-container flex id="input">
                 <label>Enter new task</label>
+                <!-- TODO: hide on $error off -->
                 <input autocomplete="off" name="taskInput" ng-model="newTask" type="text" maxlength="60"/>
                 <div ng-messages="newTask.$error" role="alert">
                     <div ng-message-exp="['maxlength']">
@@ -16,7 +17,7 @@
                 <md-button
                         type="submit"
                         class="md-fab"
-                        aria-label="Add todo item"
+                        aria-label="Add new task"
                         ng-disabled="newTask.$error || newTask == '' ">
                     <md-icon md-svg-icon="resources/add.svg"></md-icon>
                 </md-button>
@@ -27,10 +28,10 @@
 
         <md-subheader class="md-no-sticky">Tasks</md-subheader>
 
-        <ul ng-repeat="todo in todoList" layout="row" layout-align="space-between center" class="md-padding">
-            <md-checkbox ng-model="todo.done" aria-label="Todo Checkbox"></md-checkbox>
-            <span flex="85" class="list-label">{{todo.string}}</span>
-            <md-icon class="md-secondary" aria-label="Delete" ng-click="removeTodo(todo)"
+        <ul ng-repeat="task in tasksList" layout="row" layout-align="space-between center" class="md-padding">
+            <md-checkbox aria-label="Task Checkbox" ng-checked="task.done" ng-click="updateTask(task)"></md-checkbox>
+            <span flex="85" class="list-label">{{task.string}}</span>
+            <md-icon class="md-secondary" aria-label="Delete" ng-click="removeTask(task)"
                      md-svg-icon="resources/delete.svg"></md-icon>
         </ul>
 
