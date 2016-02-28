@@ -1,6 +1,6 @@
 'use strict';
 
-myApp.controller("todoCtrl" ,function ($scope, $http, connectionService) {
+myApp.controller("todoCtrl" ,function ($scope, $http) {
     $scope.newTask = "";
     $scope.tasksList = [];
     $http.get('/tasks').success(function(tasks) {
@@ -26,29 +26,4 @@ myApp.controller("todoCtrl" ,function ($scope, $http, connectionService) {
         task.done = !task.done;
         $http.post('/tasks/update', task);
     }
-
-//    connectionService.webSocket.onmessage = function(message) {
-//        var change = JSON.parse(message.data);
-//
-//        switch(change.type) {
-//            case add:
-//                $scope.tasksList.push(change.task);
-//                break;
-//            case remove:
-//                $scope.tasksList.splice( $scope.tasksList.indexOf(change.task), 1 );
-//                break;
-//            case update:
-//                var index = $scope.tasksList.findIndex(function(task) {
-//                    return task.id == change.task.id
-//                });
-//                $scope.tasksList[index] = change.task;
-//                break;
-//        }
-//
-//        $scope.$apply();
-//    };
-//
-//    connectionService.webSocket.onclose = function() {
-//        console.log("Error in websocket")
-//    }
 });

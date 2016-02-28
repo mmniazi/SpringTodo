@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootApplication
@@ -28,9 +31,12 @@ public class TodoApplication implements CommandLineRunner {
 
         tasks.addAll(repository.findAll());
 
-//        Find highest value of Id in tasks list and if list is not empty assign highest value to counter
+      /*
+      * Find highest value of Id in tasks list
+      * And if list is not empty assign (highest value + 1) to counter
+      * */
         tasks.stream().max(Comparator.comparing(Task::getId))
-                .ifPresent(task -> counter.set(task.getId()));
+                .ifPresent(task -> counter.set(task.getId() + 1));
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
@@ -46,8 +52,6 @@ public class TodoApplication implements CommandLineRunner {
 
         repository.insert(insertedTask);
 
-//        Clients.update(insertedTask);
-
         return insertedTask.getId();
     }
 
@@ -56,22 +60,21 @@ public class TodoApplication implements CommandLineRunner {
 
         tasks.removeIf(task -> task.getId() == removedTask.getId());
 
-//        Clients.update(removedTask);
-
         repository.delete(removedTask);
     }
 
     @RequestMapping(value = "/tasks/update", method = RequestMethod.POST)
     public void updateTask(@RequestBody Task updatedTask) {
 
-        // Find the task whose id is equal to updatedTask id and then replace that task with updatedTask
+         /*
+         * Find the task whose id is equal to updatedTask id
+         * And then replace that task with updatedTask
+         * */
         tasks.stream()
                 .filter(task -> task.getId() == updatedTask.getId())
                 .findFirst().ifPresent(oldTask ->
                 tasks.set(tasks.indexOf(oldTask), updatedTask)
         );
-
-//        Clients.update(newTask);
 
         repository.save(updatedTask);
     }

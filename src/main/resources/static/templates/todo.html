@@ -4,7 +4,6 @@
 
             <md-input-container flex id="input">
                 <label>Enter new task</label>
-                <!-- TODO: hide on $error off -->
                 <input autocomplete="off" name="taskInput" ng-model="newTask" type="text" maxlength="60"/>
                 <div ng-messages="newTask.$error" role="alert">
                     <div ng-message-exp="['maxlength']">
