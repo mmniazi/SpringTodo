@@ -36,7 +36,7 @@ public class TodoApplication implements CommandLineRunner {
       * And if list is not empty assign (highest value + 1) to counter
       * */
         tasks.stream().max(Comparator.comparing(Task::getId))
-                .ifPresent(task -> counter.set(task.getId() + 1));
+                .ifPresent(task -> counter.set(Integer.parseInt(task.getId() + 1)));
     }
 
     @RequestMapping(value = "/tasks", method = RequestMethod.GET)
@@ -45,9 +45,9 @@ public class TodoApplication implements CommandLineRunner {
     }
 
     @RequestMapping(value = "/tasks/add", method = RequestMethod.POST)
-    public int addTask(@RequestBody Task insertedTask) {
+    public String addTask(@RequestBody Task insertedTask) {
 
-        insertedTask.setId(counter.getAndIncrement());
+        insertedTask.setId(String.valueOf(counter.getAndIncrement()));
         tasks.add(insertedTask);
 
         repository.insert(insertedTask);
@@ -58,7 +58,7 @@ public class TodoApplication implements CommandLineRunner {
     @RequestMapping(value = "/tasks/remove", method = RequestMethod.POST)
     public void removeTask(@RequestBody Task removedTask) {
 
-        tasks.removeIf(task -> task.getId() == removedTask.getId());
+        tasks.removeIf(task -> task.getId().equals(removedTask.getId()));
 
         repository.delete(removedTask);
     }
@@ -71,7 +71,7 @@ public class TodoApplication implements CommandLineRunner {
          * And then replace that task with updatedTask
          * */
         tasks.stream()
-                .filter(task -> task.getId() == updatedTask.getId())
+                .filter(task -> task.getId().equals(updatedTask.getId()))
                 .findFirst().ifPresent(oldTask ->
                 tasks.set(tasks.indexOf(oldTask), updatedTask)
         );

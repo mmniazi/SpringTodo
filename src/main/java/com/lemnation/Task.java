@@ -9,7 +9,7 @@ import org.springframework.data.annotation.Id;
 public class Task {
 
     @Id
-    private int id;
+    private String id;
 
     private String string;
     private boolean done;
@@ -18,7 +18,7 @@ public class Task {
 
     }
 
-    public Task(String string, boolean done, int id) {
+    public Task(String string, boolean done, String id) {
         this.string = string;
         this.done = done;
         this.id = id;
@@ -41,11 +41,11 @@ public class Task {
         this.done = done;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }
